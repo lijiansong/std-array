@@ -30,7 +30,7 @@ public:
     ForwardIterator(Array<T, N> *theOuter) : index(0), outer(theOuter) {}
     ForwardIterator(bool end) : is_end(end), index(N) {}
 
-    T &operator*() const { return outer->data[index]; }
+    T &operator*() const { return outer->_data[index]; }
 
     bool operator==(const ForwardIterator &it) {
       if (index == it.index && outer == it.outer) {
@@ -78,13 +78,13 @@ public:
 
   Array(const Array &copy) : n(copy.n) {
     for (size_type i = 0; i < this->n; ++i) {
-      this->data[i] = copy.data[i];
+      this->_data[i] = copy._data[i];
     }
   }
 
   template <typename U> Array(const Array<U, N> &copy) : n(copy.n) {
     for (size_type i = 0; i < this->n; ++i) {
-      this->data[i] = copy.data[i];
+      this->_data[i] = copy._data[i];
     }
   }
 
@@ -96,7 +96,7 @@ public:
     auto it = list.begin(), ie = list.end();
     size_type i = 0;
     for (; it != ie; ++it, ++i) {
-      data[i] = *it;
+      _data[i] = *it;
     }
   }
 
@@ -106,7 +106,7 @@ public:
       return (*this);
     }
     for (size_type i = 0; i < this->n; ++i) {
-      this->data[i] = copy.data[i];
+      this->_data[i] = copy._data[i];
     }
     return (*this);
   }
@@ -114,7 +114,7 @@ public:
   template <typename U> Array &operator=(const Array<U, N> &copy) {
     this->n = copy.n;
     for (size_type i = 0; i < this->n; ++i) {
-      this->data[i] = copy.data[i];
+      this->_data[i] = copy._data[i];
     }
     return (*this);
   }
@@ -128,7 +128,7 @@ public:
     auto it = list.begin(), ie = list.end();
     size_type i = 0;
     for (; (it != ie) && (i < this->n); ++it, ++i) {
-      data[i] = *it;
+      _data[i] = *it;
     }
     return (*this);
   }
@@ -139,7 +139,7 @@ public:
     if (this->n != array.n)
       return true;
     for (size_type i = 0; i < N; ++i) {
-      if (this->data[i] != array.data[i])
+      if (this->_data[i] != array._data[i])
         return true;
     }
     return false;
@@ -154,7 +154,7 @@ public:
       OutOfRangeException exception;
       throw exception;
     }
-    return data[pos];
+    return _data[pos];
   }
 
   const_reference at(size_type pos) const {
@@ -162,7 +162,7 @@ public:
       OutOfRangeException exception;
       throw exception;
     }
-    return data[pos];
+    return _data[pos];
   }
 
   T &operator[](size_type pos) {
@@ -170,7 +170,7 @@ public:
       OutOfRangeException exception;
       throw exception;
     }
-    return data[pos];
+    return _data[pos];
   }
 
   const T &operator[](size_type pos) const {
@@ -178,12 +178,12 @@ public:
       OutOfRangeException exception;
       throw exception;
     }
-    return data[pos];
+    return _data[pos];
   }
 
-  reference front() { return data[0]; }
+  reference front() { return _data[0]; }
 
-  reference back() { return data[(this->n - 1)]; }
+  reference back() { return _data[(this->n - 1)]; }
 
   constexpr size_type size() { return N; }
 
@@ -209,13 +209,17 @@ public:
 
   void fill(const T &value) {
     for (size_type i = 0; i < this->n; ++i) {
-      data[i] = value;
+      _data[i] = value;
     }
   }
+
+  T* data() { return (T*)_data; }
+
+  constexpr const T* data() const { return (T*)_data; }
   //-------------------------------------------------------------
 
 private:
-  T data[N];
+  T _data[N];
   size_type n;
 };
 

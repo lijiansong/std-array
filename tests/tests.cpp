@@ -34,6 +34,11 @@ BOOST_AUTO_TEST_CASE(ArrayBasic) {
   BOOST_CHECK(A[0] == 20);
   BOOST_CHECK(A[1] == 20);
   BOOST_CHECK(A[2] == 20);
+
+  int *b = A.data();
+  BOOST_CHECK(b[0] == 20);
+  BOOST_CHECK(b[1] == 20);
+  BOOST_CHECK(b[2] == 20);
 }
 
 BOOST_AUTO_TEST_CASE(ArrayConstructor) {
