@@ -15,60 +15,17 @@ template <typename T, std::size_t N> class Array {
 public:
   //------------------------- ALIAS -----------------------------
   using value_type = T;
-  using reference = value_type &;
-  using const_reference = const value_type &;
-  using pointer = value_type *;
-  using const_pointer = const value_type *;
   using size_type = std::size_t;
+  using difference_type = std::ptrdiff_t;
+  using reference = T &;
+  using const_reference = const T &;
+  using pointer = T *;
+  using const_pointer = const T *;
+  using iterator = T *;
+  using const_iterator = const T *;
   //-------------------------------------------------------------
-  struct ForwardIterator {
-    bool is_end = false;
-    size_type index;
-    Array<T, N> *outer;
-    bool top_level = true;
-    ForwardIterator() : index(0), outer(NULL) {}
-    ForwardIterator(Array<T, N> *theOuter) : index(0), outer(theOuter) {}
-    ForwardIterator(bool end) : is_end(end), index(N) {}
-
-    T &operator*() const { return outer->_data[index]; }
-
-    bool operator==(const ForwardIterator &it) {
-      if (index == it.index && outer == it.outer) {
-        return true;
-      } else if (index == it.index && is_end && it.is_end && top_level &&
-                 it.top_level) {
-        return true;
-      }
-      return false;
-    }
-
-    bool operator!=(const ForwardIterator &it) { return !((*this) == it); }
-
-    bool it_inc() {
-      if (++index == N) {
-        return true;
-      }
-      return false;
-    }
-
-    ForwardIterator &operator++() {
-      if (it_inc()) {
-        is_end = true;
-      }
-      return (*this);
-    }
-
-    ForwardIterator operator++(int) {
-      ForwardIterator it = (*this);
-      ++(*this);
-      return it;
-    }
-  };
 
 public:
-  //------------------------- ALIAS -----------------------------
-  using iterator = ForwardIterator;
-  //-------------------------------------------------------------
 
   //--------------------- Constructors --------------------------
   Array() {
@@ -187,25 +144,10 @@ public:
 
   constexpr size_type size() { return N; }
 
-  iterator begin() {
-    iterator it(this);
-    return it;
-  }
-
-  constexpr iterator begin() {
-    iterator it(this);
-    return it;
-  }
-
-  iterator end() {
-    iterator it(true);
-    return it;
-  }
-
-  constexpr iterator end() {
-    iterator it(true);
-    return it;
-  }
+  iterator begin() { return _data; }
+  iterator end() { return _data + n; }
+  const_iterator begin() const { return _data; }
+  const_iterator end() const { return _data + n; }
 
   void fill(const T &value) {
     for (size_type i = 0; i < this->n; ++i) {
@@ -220,6 +162,7 @@ public:
 
 private:
   T _data[N];
+  // TODO: for static array, n maybe needless
   size_type n;
 };
 
